@@ -9,14 +9,14 @@
 
 // Paragraphs with characteristic  "\n  "  pattern
 document.querySelectorAll(".usertext-body.md-container > .md p").forEach((p) => {
-  if (p.childNodes.length === 1 && p.textContent.indexOf("\n  ") != -1 ) {
-    p.outerHTML = "<pre><code>" + p.innerHTML.replace(/\n  /g, "\n") + "</code></pre>";
+  if (p.childNodes.length === 1 && p.textContent.indexOf("\n  ") !== -1 ) {
+    p.outerHTML = "<pre><code>" + p.innerHTML.replace(/\n {2}/g, "\n") + "</code></pre>";
   }
 });
 
 // <code> with multiline body
 document.querySelectorAll(".usertext-body.md-container > .md p > code").forEach((code) => {
-  if (code.textContent.indexOf("\n") != -1 ) {
+  if (code.textContent.indexOf("\n") !== -1 ) {
     code.outerHTML = "<pre><code>" + code.innerHTML.slice(1) + "</code></pre>";
   }
 });
@@ -32,7 +32,7 @@ document.querySelectorAll(".usertext-body.md-container > .md").forEach((md) => {
     while (i < children.length) {
       let text = children[i].textContent;
       let idx = text.indexOf("```");
-      if (idx != -1) {
+      if (idx !== -1) {
         text = text.slice(idx);
         lines.push(...(text + "\n").split("\n"));
         children[i].innerHTML = children[i].innerHTML.replace(text, "");
@@ -57,7 +57,7 @@ document.querySelectorAll(".usertext-body.md-container > .md").forEach((md) => {
     if (endIdx >= children.length) { continue; }
 
     // Remove the fences
-    if (lines.length == 0) { continue; }
+    if (lines.length === 0) { continue; }
     lines[0] = lines[0].slice(3);
     lines[lines.length - 1] = lines[lines.length - 1].slice(0, -3);
 
