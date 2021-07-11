@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Reddit Old - Fenced code
+// @description  Turns fenced code into code blocks on Old Reddit
 // @version      0.9.0
 // @author       Jorengarenar
 // @run-at       document-end
