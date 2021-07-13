@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Reddit Old - Better Markdown
+// @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
 // @version      1.0.1
 // @author       Jorengarenar
