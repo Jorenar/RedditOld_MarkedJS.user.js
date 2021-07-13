@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Old - Better Markdown
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.0.0
+// @version      1.0.1
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -28,7 +28,7 @@ const spoiler = {
   renderer(token) {
     return `<span class="md-spoiler-text">${this.parseInline(token.tokens)}</span>`;
   }
-}
+};
 
 const superscript = {
   name: "superscript",
@@ -50,7 +50,7 @@ const superscript = {
   renderer(token) {
     return `<sup>${this.parseInline(token.tokens)}</sup>`;
   }
-}
+};
 
 const subreddit = {
   name: "subreddit",
@@ -70,7 +70,7 @@ const subreddit = {
   renderer(token) {
     return `<a href="/${token.text}">${token.text}</a>`;
   }
-}
+};
 
 const imgPreview = {
   name: "imgPreview",
@@ -90,7 +90,7 @@ const imgPreview = {
   renderer(token) {
     return `<a href="${token.text}"><img src="${token.text}"></a>`;
   }
-}
+};
 
 const escHTML = {
   name: "escHTML",
@@ -111,7 +111,7 @@ const escHTML = {
   renderer(token) {
     return `&lt;${this.parseInline(token.tokens)}&gt;`;
   }
-}
+};
 
 marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, escHTML ] });
 
@@ -119,15 +119,15 @@ marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, escHTML 
 function recodeHTML(html) {
   let txt = document.createElement("textarea");
   txt.innerHTML = html;
-  return txt.value.replace(/<(.+)>(.*)<\/\1>/g, '&lt;$1&gt;$2&lt;\/$1&gt;');
-};
+  return txt.value.replace(/<(.+)>(.*)<\/\1>/g, "&lt;$1&gt;$2&lt;\/$1&gt;");
+}
 
 function genMd(d) {
-  d.data.children.forEach(c => {
+  d.data.children.forEach((c) => {
     if (c.kind === "t1" || c.kind === "t3") {
       let md = document.querySelector(`#thing_${c.kind}_${c.data.id} > .entry > ` +
                                       `${c.kind === "t3" ? "div >" : ""} form > ` +
-                                      `.usertext-body > .md:not(.marked)`);
+                                      `.usertext-body > .md:not(.marked)` );
       if (md) {
         const text = c.kind === "t3" ? c.data.selftext : c.data.body;
         md.innerHTML = marked(recodeHTML(text)); // unsure whether sanitization will be necessary?
@@ -153,5 +153,5 @@ Markdown();
 window.onload = function() {
   new MutationObserver(function() {
     if (document.querySelector(".thing .usertext-body > .md:not(.marked)")) { Markdown(); }
-  }).observe( document.querySelector('.content[role="main"]'), { childList: true, subtree: true } );
+  }).observe( document.querySelector(".content[role="main"]"), { childList: true, subtree: true } );
 };

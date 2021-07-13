@@ -80,11 +80,11 @@ document.querySelectorAll(".usertext-body.md-container > .md").forEach((md) => {
 
 // Lists {{{1
 document.querySelectorAll(".md > p").forEach((p) => {
-  if (p.textContent.match(/(\n\s*[-*].*){2,}/g)) {
+  if (p.textContent.match(/(\n\s*[-*].*){2,}/)) {
     let text = p.textContent.split(/\n\s*[-*]\s* /);
     p.innerHTML = text[0];
     let ul = document.createElement("ul");
-    text.slice(1).forEach(t => {
+    text.slice(1).forEach((t) => {
       let li = document.createElement("li");
       li.innerHTML = t;
       ul.appendChild(li);
@@ -94,8 +94,8 @@ document.querySelectorAll(".md > p").forEach((p) => {
 });
 
 // Spoilers {{{1
-document.querySelectorAll(".md p, .md li").forEach(e => {
-  e.childNodes.forEach(c => {
+document.querySelectorAll(".md p, .md li").forEach((e) => {
+  e.childNodes.forEach((c) => {
      if (c.nodeType === Node.TEXT_NODE) {
        if (c.data.match(/>!( .* )!</gm)) {
          let span = document.createElement("span");
