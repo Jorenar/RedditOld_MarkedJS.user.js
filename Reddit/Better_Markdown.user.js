@@ -153,5 +153,5 @@ Markdown();
 window.onload = function() {
   new MutationObserver(function() {
     if (document.querySelector(".thing .usertext-body > .md:not(.marked)")) { Markdown(); }
-  }).observe( document.querySelector(".content[role="main"]"), { childList: true, subtree: true } );
+  }).observe( document.querySelector(".content[role='main']"), { childList: true, subtree: true } );
 };
