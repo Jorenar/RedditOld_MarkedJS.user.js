@@ -99,7 +99,7 @@ document.querySelectorAll(".md p, .md li").forEach((e) => {
      if (c.nodeType === Node.TEXT_NODE) {
        if (c.data.match(/>!( .* )!</gm)) {
          let span = document.createElement("span");
-         span.innerHTML = c.textContent.replace(/>!( .*? )!</gm, '<span class="md-spoiler-text">$1</span>');
+         span.innerHTML = c.textContent.replace(/>!( .*? )!</gm, "<span class='md-spoiler-text'>$1</span>");
          e.replaceChild(span, c);
        }
      }
