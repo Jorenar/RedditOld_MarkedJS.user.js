@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Old - Better Markdown
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      0.9.2
+// @version      1.0.0
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -72,6 +72,26 @@ const subreddit = {
   }
 }
 
+const imgPreview = {
+  name: "imgPreview",
+  level: "inline",
+  start(src) { return src.match(/https:\/\/preview\.redd\.it/)?.index; },
+  tokenizer(src, tokens) {
+    const rule = /^(https:\/\/preview\.redd\.it\/\S+)/;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "imgPreview",
+        raw: match[0],
+        text: match[1]
+      };
+    }
+  },
+  renderer(token) {
+    return `<a href="${token.text}"><img src="${token.text}"></a>`;
+  }
+}
+
 const escHTML = {
   name: "escHTML",
   level: "inline",
@@ -93,7 +113,7 @@ const escHTML = {
   }
 }
 
-marked.use({ extensions: [ spoiler, superscript, subreddit, escHTML ] });
+marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, escHTML ] });
 
 
 function recodeHTML(html) {
