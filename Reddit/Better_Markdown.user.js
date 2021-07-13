@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Old - Better Markdown
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      0.9.0
+// @version      0.9.2
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -26,7 +26,7 @@ const spoiler = {
     }
   },
   renderer(token) {
-    return `<span class="md-spoiler-text">${this.parseInline(token.tokens)}</span>`; // parseInline to turn child tokens into HTML
+    return `<span class="md-spoiler-text">${this.parseInline(token.tokens)}</span>`;
   }
 }
 
@@ -72,7 +72,28 @@ const subreddit = {
   }
 }
 
-marked.use({ extensions: [ spoiler, superscript, subreddit ] });
+const escHTML = {
+  name: "escHTML",
+  level: "inline",
+  start(src) { return src.match(/</)?.index; },
+  tokenizer(src, tokens) {
+    const rule = /^<(.*?)>/;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "escHTML",
+        raw: match[0],
+        text: match[1],
+        tokens: this.inlineTokens(match[1])
+      };
+    }
+  },
+  renderer(token) {
+    return `&lt;${this.parseInline(token.tokens)}&gt;`;
+  }
+}
+
+marked.use({ extensions: [ spoiler, superscript, subreddit, escHTML ] });
 
 
 function recodeHTML(html) {
