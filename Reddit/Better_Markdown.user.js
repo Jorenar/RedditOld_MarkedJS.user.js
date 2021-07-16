@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.0
+// @version      1.1.1
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -55,7 +55,7 @@ const superscript = {
 const subreddit = {
   name: "subreddit",
   level: "inline",
-  start(src) { return src.match(/\/?[ru]\//)?.index; },
+  start(src) { return src.match(/(?<=\s)\/?[ru]\//)?.index; },
   tokenizer(src, tokens) {
     const rule = /^\/?([ru]\/\w+)/;
     const match = rule.exec(src);
@@ -108,7 +108,7 @@ const gif = {
     }
   },
   renderer(token) {
-    return `<a href="https://giphy.com/gifs/${token.text}"><img src="https://i.giphy.com/media/${token.text}/giphy.gif"></a>`;
+    return `<a href="https://giphy.com/gifs/${token.text}" target="blank_"><img src="https://i.giphy.com/media/${token.text}/giphy.gif"></a>`;
   }
 };
 
