@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.1
+// @version      1.1.2
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -57,7 +57,7 @@ const subreddit = {
   level: "inline",
   start(src) { return src.match(/(?<=\s)\/?[ru]\//)?.index; },
   tokenizer(src, tokens) {
-    const rule = /^\/?([ru]\/\w+)/;
+    const rule = /^\/?([ru]\/[\w\d_-]+)/;
     const match = rule.exec(src);
     if (match) {
       return {
