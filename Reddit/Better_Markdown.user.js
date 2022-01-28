@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.2
+// @version      1.1.3
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -150,7 +150,7 @@ function genMd(d) {
                                       `.usertext-body > .md:not(.marked)` );
       if (md) {
         const text = c.kind === "t3" ? c.data.selftext : c.data.body;
-        md.innerHTML = marked(recodeHTML(text)); // unsure whether sanitization will be necessary?
+        md.innerHTML = marked.parse(recodeHTML(text)); // unsure whether sanitization will be necessary?
         md.classList.add("marked");
       }
     }
