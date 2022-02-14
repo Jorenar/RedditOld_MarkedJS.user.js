@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.5
+// @version      1.1.6
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -21,12 +21,12 @@ const spoiler = {
         type: "spoiler",
         raw: match[0],
         text: match[1],
-        tokens: this.inlineTokens(match[1])
+        tokens: this.lexer.inlineTokens(match[1])
       };
     }
   },
   renderer(token) {
-    return `<span class="md-spoiler-text">${this.parseInline(token.tokens)}</span>`;
+    return `<span class="md-spoiler-text">${this.parser.parseInline(token.tokens)}</span>`;
   }
 };
 
@@ -43,12 +43,12 @@ const superscript = {
         type: "superscript",
         raw: match[0],
         text: txt,
-        tokens: this.inlineTokens(txt)
+        tokens: this.lexer.inlineTokens(txt)
       };
     }
   },
   renderer(token) {
-    return `<sup>${this.parseInline(token.tokens)}</sup>`;
+    return `<sup>${this.parser.parseInline(token.tokens)}</sup>`;
   }
 };
 
@@ -124,12 +124,12 @@ const escHTML = {
         type: "escHTML",
         raw: match[0],
         text: match[1],
-        tokens: this.inlineTokens(match[1])
+        tokens: this.lexer.inlineTokens(match[1])
       };
     }
   },
   renderer(token) {
-    return `&lt;${this.parseInline(token.tokens)}&gt;`;
+    return `&lt;${this.parser.parseInline(token.tokens)}&gt;`;
   }
 };
 
