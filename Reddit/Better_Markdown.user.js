@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.6
+// @version      1.1.7
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -139,7 +139,7 @@ marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, gif, esc
 function recodeHTML(html) {
   let txt = document.createElement("textarea");
   txt.innerHTML = html;
-  return txt.value.replace(/<(.+)>(.*)<\/\1>/g, "&lt;$1&gt;$2&lt;\/$1&gt;");
+  return txt.value.replace(/<(.+)>(.*?)<\/\1>/gms, "&lt;$1&gt;$2&lt;\/$1&gt;");
 }
 
 function genMd(d) {
