@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.7
+// @version      1.1.8
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -12,9 +12,9 @@
 const spoiler = {
   name: "spoiler",
   level: "inline",
-  start(src) { return src.match(/>!/)?.index; },
+  start(src) { return src.match(/@?>!/)?.index; },
   tokenizer(src, tokens) {
-    const rule = /^>!(.*?)!</;
+    const rule = /^@?>!(.*?)!</;
     const match = rule.exec(src);
     if (match) {
       return {
