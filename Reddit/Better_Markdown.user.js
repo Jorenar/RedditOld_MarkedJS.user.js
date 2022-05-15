@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.1.9
+// @version      1.2.0
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
@@ -21,12 +21,12 @@ const spoiler = {
     const rule = /^@?>!(.*?)!</;
     const match = rule.exec(src);
     if (match) {
-      return {
+      const token = {
         type: "spoiler",
         raw: match[0],
-        text: match[1],
-        tokens: this.lexer.inlineTokens(match[1])
+        tokens: this.lexer.inlineTokens(match[1]),
       };
+      return token;
     }
   },
   renderer(token) {
@@ -42,12 +42,10 @@ const superscript = {
     const rule = /^\^(\((.*?)\)|(\S+))/;
     const match = rule.exec(src);
     if (match) {
-      const txt = match[2] ? match[2] : match[3];
       return {
         type: "superscript",
         raw: match[0],
-        text: txt,
-        tokens: this.lexer.inlineTokens(txt)
+        tokens: this.lexer.inlineTokens(match[2] ? match[2] : match[3])
       };
     }
   },
@@ -116,6 +114,29 @@ const gif = {
   }
 };
 
+
+const emotes = {};
+
+const emote = {
+  name: "emote",
+  level: "inline",
+  start(src) { return src.match(/!\[/)?.index; },
+  tokenizer(src) {
+    const rule = /^!\[img\]\((emote\|.*?)\)/;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "emote",
+        raw: match[0],
+        id: match[1]
+      };
+    }
+  },
+  renderer(token) {
+    return `<img src="${emotes[token.id]}" title=":${token.id.split('|').pop()}:" width="20" height="20">`;
+  }
+};
+
 const escHTML = {
   name: "escHTML",
   level: "inline",
@@ -127,7 +148,6 @@ const escHTML = {
       return {
         type: "escHTML",
         raw: match[0],
-        text: match[1],
         tokens: this.lexer.inlineTokens(match[1])
       };
     }
@@ -137,26 +157,36 @@ const escHTML = {
   }
 };
 
-marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, gif, escHTML ] });
+marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, gif, emote, escHTML ] });
 
 
 function recodeHTML(html) {
   const txt = document.createElement("textarea");
   txt.innerHTML = html;
-  return txt.value.replace(/<(.+)>(.*?)<\/\1>/gms, "&lt;$1&gt;$2&lt;\/$1&gt;");
+  return txt.value;
 }
 
 function genMd(d) {
   d.data.children.forEach((c) => {
     if (c.kind === "t1" || c.kind === "t3") {
       const md = document.querySelector(`#thing_${c.kind}_${c.data.id} > .entry > ` +
-                                        `${c.kind === "t3" ? "div >" : ""} form > ` +
-                                        `.usertext-body > .md:not(.marked)` );
+                                        `${c.kind === "t3" ? "div >" : ""} ` +
+                                        `form > .usertext-body > .md:not(.marked)` );
+      if (c.data.media_metadata) {
+        Object.values(c.data.media_metadata).forEach((e) => { emotes[e.id] = e.s.u; });
+      }
+
       if (md) {
         const text = c.kind === "t3" ? c.data.selftext : c.data.body;
-        let html = recodeHTML(text);
-        html = html.replace(/^>!(.*)!</m, "@>!$1!<");
-        md.innerHTML = marked.parse(html); // unsure whether sanitization will be necessary?
+
+        let markdown = recodeHTML(text);
+        markdown = markdown.replace(/^ {0,3}</gm, "&lt;"); // HTML looking string at the start of line
+        markdown = markdown.replace(/^ {0,3}>!/gm, "@>!"); // prevents confusion with comment
+        markdown = markdown.replace(/([^\n])\n\s*```(\S+?)?$/gm, "$1\n\n```"); // fix code fence withou empty line above
+        markdown = markdown.replace(/(```.*?[^\n])```/gms, "$1\n```"); // fix ending code fence not in new line
+        console.log(markdown)
+
+        md.innerHTML = marked.parse(markdown);
         md.classList.add("marked");
       }
     }
