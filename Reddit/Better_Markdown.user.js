@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.2.0
+// @version      1.2.1
 // @author       Jorengarenar
 // @run-at       document-start
-// @require      https://cdn.jsdelivr.net/npm/marked/marked.min.js
+// @require      https://cdn.jsdelivr.net/npm/marked@4.0.18/marked.min.js
 // @match        https://*.reddit.com/r/*/*
 // @match        https://*.reddit.com/user/*
 // ==/UserScript==
