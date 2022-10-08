@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Markdown for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with Marked
-// @version      1.2.2
+// @version      1.2.3
 // @author       Jorengarenar
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked@4.0.18/marked.min.js
@@ -184,7 +184,7 @@ function genMd(d) {
         markdown = markdown.replace(/^ {0,3}>!/gm, "@>!"); // prevents confusion with comment
         markdown = markdown.replace(/([^\n])\n\s*```(\S+?)?$/gm, "$1\n\n```"); // fix code fence without empty line above
         markdown = markdown.replace(/(```.*?\n.*?[^\n])```/gms, "$1\n```"); // fix ending code fence not in new line
-        console.log(markdown)
+        markdown = markdown.replace(/^(#+)(\S)/gm, "$1 $2"); // add space after header #s in case it's missing
 
         md.innerHTML = marked.parse(markdown);
         md.classList.add("marked");
