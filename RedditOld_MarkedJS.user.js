@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Better Markdown for Old Reddit
-// @description  Replace Markdown renderer on Old Reddit with Marked
+// @name         Marked for Old Reddit
+// @description  Replace Markdown renderer on Old Reddit with MarkedJS
 // @version      1.2.5
 // @author       Jorengarenar
 // @run-at       document-start
