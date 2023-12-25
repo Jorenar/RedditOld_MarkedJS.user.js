@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Marked for Old Reddit
+// @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
 // @version      1.2.5
 // @author       Jorengarenar
