@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.2.6
+// @version      1.2.7
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
@@ -15,7 +15,7 @@
 
 "use strict";
 
-GM_addStyle(`.comment img { max-width: 240px; }`);
+GM_addStyle(`.comment .md img { max-width: min(240px, 100%); }`);
 
 const spoiler = {
   name: "spoiler",
