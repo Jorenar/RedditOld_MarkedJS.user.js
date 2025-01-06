@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.2.5
+// @version      1.2.6
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
+// @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/marked@4.1.1/marked.min.js
 // @match        https://*.reddit.com/r/*/*
 // @match        https://*.reddit.com/user/*
@@ -13,6 +14,8 @@
 /* global marked */
 
 "use strict";
+
+GM_addStyle(`.comment img { max-width: 240px; }`);
 
 const spoiler = {
   name: "spoiler",
@@ -91,7 +94,7 @@ const imgPreview = {
     }
   },
   renderer(token) {
-    return `<a href="${token.text}"><img src="${token.text}"></a>`;
+    return `<a href="${token.text}"><img src="${token.text}" loading="lazy"></a>`;
   }
 };
 
