@@ -2,7 +2,8 @@
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
 // @version      1.2.5
-// @author       Jorengarenar
+// @author       Jorenar
+// @namespace    https://jorenar.com
 // @run-at       document-start
 // @require      https://cdn.jsdelivr.net/npm/marked@4.1.1/marked.min.js
 // @match        https://*.reddit.com/r/*/*
