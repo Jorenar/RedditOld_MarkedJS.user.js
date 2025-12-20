@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.2.9
+// @version      1.2.10
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
@@ -173,9 +173,7 @@ function recodeHTML(html) {
 function genMd(d) {
   d.data.children.forEach((c) => {
     if (c.kind === "t1" || c.kind === "t3") {
-      const md = document.querySelector(`#thing_${c.kind}_${c.data.id} > .entry > ` +
-                                        `${c.kind === "t3" ? "div >" : ""} ` +
-                                        `form > .usertext-body > .md:not(.marked)` );
+      const md = document.querySelector(`#thing_${c.kind}_${c.data.id} > .entry .usertext-body > .md:not(.marked)`);
       if (c.data.media_metadata) {
         Object.values(c.data.media_metadata).forEach((e) => { emotes[e.id] = e.s.u; });
       }
@@ -187,8 +185,8 @@ function genMd(d) {
         markdown = markdown.replace(/^ {0,3}</gm, "&lt;"); // HTML looking string at the start of line
         markdown = markdown.replace(/^ {0,3}>!/gm, "@>!"); // prevents confusion with comment
         markdown = markdown.replace(/([^\n])\n\s*```(\S+?)?$/gm, "$1\n\n```"); // fix code fence without empty line above
-        markdown = markdown.replace(/(```.*?\n.*?[^\n])```/gms, "$1\n```"); // fix ending code fence not in new line
-        markdown = markdown.replace(/^(#+)([^# ])/gm, "$1 $2"); // add space after header #s in case it's missing
+        markdown = markdown.replace(/(```.*?\n.*?[^\n])```/gms, "$1\n```"); // fix ending code fence not in newline
+        markdown = markdown.replace(/^(#+)([^# ])/gm, "$1 $2"); // add space after header #s, in case it's missing
 
         md.innerHTML = marked.parse(markdown);
         md.classList.add("marked");
