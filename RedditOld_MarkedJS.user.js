@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.2.8
+// @version      1.2.9
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
@@ -89,7 +89,7 @@ const imgPreview = {
       return {
         type: "imgPreview",
         raw: match[0],
-        text: match[1]
+        text: match[1].replace(/\?.*/, '').replace('preview', 'i')
       };
     }
   },
