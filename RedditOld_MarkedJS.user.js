@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.2.10
+// @version      1.3.0
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
@@ -171,11 +171,11 @@ function recodeHTML(html) {
 }
 
 function genMd(d) {
-  d.data.children.forEach((c) => {
+  for (const c of d.data.children) {
     if (c.kind === "t1" || c.kind === "t3") {
       const md = document.querySelector(`#thing_${c.kind}_${c.data.id} > .entry .usertext-body > .md:not(.marked)`);
       if (c.data.media_metadata) {
-        Object.values(c.data.media_metadata).forEach((e) => { emotes[e.id] = e.s.u; });
+        for (const e of Object.values(c.data.media_metadata)) { emotes[e.id] = e.s.u; };
       }
 
       if (md) {
@@ -193,24 +193,16 @@ function genMd(d) {
       }
     }
     if (c.data.replies) { genMd(c.data.replies); }
-  });
-}
-
-async function Markdown() {
-  const loc = window.location;
-  const response = await fetch(loc.origin + loc.pathname + ".json" + loc.search);
-  const json = await response.json();
-  if (json.length) {
-    json.forEach(genMd);
-  } else {
-    genMd(json);
   }
 }
 
-Markdown();
-
-window.onload = function() {
-  new MutationObserver(function() {
+window.onload = () => {
+  new MutationObserver(() => {
     if (document.querySelector(".thing .usertext-body > .md:not(.marked)")) { Markdown(); }
   }).observe( document.querySelector(".content[role='main']"), { childList: true, subtree: true } );
-};
+}
+
+const loc = window.location;
+const DATA = await fetch(loc.origin + loc.pathname + ".json" + loc.search).then(res => res.json());
+const Markdown = DATA.length ? ()=>{ DATA.forEach(genMd); } : ()=>{ genMd(DATA); };
+Markdown();
