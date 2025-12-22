@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.3.1
+// @version      1.3.2
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @run-at       document-start
@@ -198,7 +198,12 @@ function genMd(d) {
 
 window.onload = () => {
   new MutationObserver(() => {
-    if (document.querySelector(".thing .usertext-body > .md:not(.marked)")) { Markdown(); }
+    if (document.querySelector(".thing .usertext-body > .md:not(.marked)")) {
+      Markdown();
+    }
+    for (const a of document.querySelectorAll('a[href*="preview.redd.it"')) {
+      a.href = a.href.replace(/\?.*/, '').replace('preview', 'i');
+    }
   }).observe( document.querySelector(".content[role='main']"), { childList: true, subtree: true } );
 }
 
