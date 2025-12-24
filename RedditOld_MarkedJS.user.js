@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.3.2
+// @version      1.3.3
 // @author       Jorenar
 // @namespace    https://jorenar.com
+// @homepage     https://codeberg.org/Jorenar/RedditOld_MarkedJS.user.js
 // @run-at       document-start
 // @grant        GM_addStyle
 // @require      https://cdn.jsdelivr.net/npm/marked@17.0.1/lib/marked.umd.js
