@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.3.5
+// @version      1.3.6
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @homepage     https://codeberg.org/Jorenar/RedditOld_MarkedJS.user.js
@@ -180,7 +180,13 @@ function genMd(d) {
       }
 
       if (md) {
-        const text = c.kind === "t3" ? c.data.selftext : c.data.body;
+        const text = ((kind, data) => {
+          if (kind === "t3") {
+            const crosspost = data.crosspost_parent_list;
+            return crosspost ? crosspost[0].selftext : data.selftext
+          }
+          return data.body;
+        })(c.kind, c.data);
 
         let markdown = recodeHTML(text);
         markdown = markdown.replace(/^ {0,3}</gm, "&lt;"); // HTML looking string at the start of line
