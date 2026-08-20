@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         MarkedJS for Old Reddit
 // @description  Replace Markdown renderer on Old Reddit with MarkedJS
-// @version      1.3.6
+// @version      1.3.7
 // @author       Jorenar
 // @namespace    https://jorenar.com
 // @homepage     https://codeberg.org/Jorenar/RedditOld_MarkedJS.user.js
@@ -17,6 +17,7 @@
 "use strict";
 
 GM_addStyle(`.comment .md img { max-width: min(240px, 100%); }`);
+GM_addStyle(`.crosspost-preview .md { text-align: left; }`);
 
 const spoiler = {
   name: "spoiler",
@@ -79,16 +80,16 @@ const subreddit = {
   }
 };
 
-const imgPreview = {
-  name: "imgPreview",
+const img = {
+  name: "img",
   level: "inline",
-  start(src) { return src.match(/https:\/\/preview\.redd\.it/)?.index; },
+  start(src) { return src.match(/https:\/\/(i|preview)\.redd\.it/)?.index; },
   tokenizer(src) {
-    const rule = /^(https:\/\/preview\.redd\.it\/\S+)/;
+    const rule = /^(https:\/\/(i|preview)\.redd\.it\/\S+)/;
     const match = rule.exec(src);
     if (match) {
       return {
-        type: "imgPreview",
+        type: "img",
         raw: match[0],
         text: match[1].replace(/\?.*/, '').replace('preview', 'i')
       };
@@ -96,6 +97,26 @@ const imgPreview = {
   },
   renderer(token) {
     return `<a href="${token.text}"><img src="${token.text}" loading="lazy"></a>`;
+  }
+};
+
+const vid = {
+  name: "vid",
+  level: "inline",
+  start(src) { return src.match(/https:\/\/reddit\.com\/link/)?.index; },
+  tokenizer(src) {
+    const rule = /^https:\/\/reddit.com\/link\/.*\/video\/(.*)\/player/;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "vid",
+        raw: match[0],
+        text: match[1]
+      };
+    }
+  },
+  renderer(token) {
+    return `<a href="https://reddit.com/media?url=https://v.redd.it/${token.text}/HLSPlaylist.m3u8">&lt;video&gt;</a>`;
   }
 };
 
@@ -162,7 +183,7 @@ const escHTML = {
   }
 };
 
-marked.use({ extensions: [ spoiler, superscript, subreddit, imgPreview, gif, emote, escHTML ] });
+marked.use({ extensions: [ spoiler, superscript, subreddit, img, vid, gif, emote, escHTML ] });
 
 
 function recodeHTML(html) {
